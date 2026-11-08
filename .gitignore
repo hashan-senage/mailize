@@ -31,3 +31,10 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Build output
+build/bin/
+node_modules/
+frontend/dist/*
+!frontend/dist/gitkeep
+release/

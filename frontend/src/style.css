@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Brand foundation: #0878D1 blue, #29B9E8 cyan, #0B1220 navy, #101827 bg, #172235 surface,
+   #263449 border, #94A3B8 muted, #F8FAFC light bg. */
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --border: #dbe3ee;
+  --fg: #0b1220;
+  --muted: #64748b;
+  --brand: #0878d1;
+  --cyan: #29b9e8;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+}
+
+.dark {
+  --bg: #101827;
+  --surface: #172235;
+  --surface-2: #0b1220;
+  --border: #263449;
+  --fg: #f8fafc;
+  --muted: #94a3b8;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-cyan: var(--cyan);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --font-sans: "Inter", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", Consolas, ui-monospace, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden; /* the app shell scrolls its own regions */
+  user-select: none; /* desktop app: opt text back in where useful */
+}
+
+.selectable {
+  user-select: text;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+/* Text-entry controls signal focus with the border colour only (no outline / box-shadow). */
+input:not([type='checkbox']):not([type='radio']):focus,
+input:not([type='checkbox']):not([type='radio']):focus-visible,
+textarea:focus,
+textarea:focus-visible,
+[role='combobox']:focus,
+[role='combobox']:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Subtle, desktop-style scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.brand-gradient {
+  background-image: linear-gradient(135deg, #0878d1, #29b9e8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

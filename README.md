@@ -4,90 +4,67 @@
 
 **Build. Send. Capture. Debug.**
 
-Mailize is a developer-focused desktop application that makes testing emails during local development simple and safe.
+Mailize is a local-first desktop app for developers. It runs a local SMTP server that captures the emails your application sends, so you can preview HTML, inspect headers and raw source, and download attachments — without ever delivering anything to real recipients.
 
-It provides a local SMTP server that captures outgoing emails from your applications, allowing you to preview HTML emails, inspect headers, view attachments, and debug email functionality without delivering messages to real recipients.
+## Features
 
-## ✨ Features
+- **Local SMTP capture server** — start/stop from the UI, default `127.0.0.1:1025`, PLAIN and LOGIN auth, size and connection limits.
+- **Projects** — each with its own generated SMTP credentials and its own inbox; enable/disable, edit, delete, regenerate credentials.
+- **SMTP configuration generator** — Laravel, PHP (PHPMailer), Node.js (Nodemailer) and generic presets with copy buttons.
+- **Inbox** — search; filter by project, sender, recipient, date, unread; sort; pagination; bulk delete; mark read/unread; live updates when mail arrives.
+- **Inspector** — sandboxed HTML preview (scripts and remote content blocked), plain text, headers, raw source, attachments (native “save as” dialog).
+- **Overview** — Start/Stop button, live server details (address, uptime, connections, limits, exposure), totals, unread, attachments, 7-day activity chart, per-project figures, top senders, recent emails.
+- **Live notifications** — a toast on any page when mail arrives, plus an unread badge on the Inbox in the sidebar.
+- **Dark / light / system themes**, keyboard-friendly, desktop-first Windows UI.
 
-- **Local SMTP Server** – Capture outgoing emails from locally running applications.
-- **Project Management** – Organize email testing environments by project.
-- **SMTP Configuration Generator** – Generate ready-to-use SMTP credentials and configurations.
-- **Email Inbox** – View all captured emails in one place.
-- **HTML Email Preview** – Preview rendered HTML emails.
-- **Email Inspector** – Inspect headers, recipients, sender information, and raw email content.
-- **Attachment Viewer** – Inspect and download email attachments.
-- **Search & Filtering** – Quickly find captured messages.
-- **Local-First** – Keep your development email data on your own machine.
+## Quick start
 
-## 🛠️ Technology Stack
-
-| Technology | Purpose |
-|---|---|
-| Go | Backend and SMTP server |
-| Wails | Desktop application framework |
-| React | Frontend UI |
-| TypeScript | Type safety |
-| Tailwind CSS | Styling |
-| SQLite | Local database |
-
-## 🚀 How It Works
-
-1. Create a project in Mailize.
-2. Generate project-specific SMTP credentials.
-3. Copy the generated configuration into your application's `.env` file.
-4. Trigger an email from your application.
-5. Open Mailize to view and inspect the captured email.
-
-### Example Laravel Configuration
+1. Download `Mailize.exe` (or the zip) from the Releases page and run it.
+2. **Projects → Create project**. Mailize shows the SMTP configuration for that project.
+3. **SMTP Server → Start server** (or enable “Start SMTP server when Mailize launches” in Settings).
+4. Paste the configuration into your app, e.g. Laravel `.env`:
 
 ```env
 MAIL_MAILER=smtp
 MAIL_HOST=127.0.0.1
 MAIL_PORT=1025
-MAIL_USERNAME=your_project_username
-MAIL_PASSWORD=your_project_password
+MAIL_USERNAME=<project username>
+MAIL_PASSWORD=<project password>
 MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS="test@example.local"
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-Your application can send emails normally, while Mailize captures them locally instead of delivering them to actual recipients.
+5. Send an email from your app and open the **Inbox**.
 
-## 🏗️ Planned Development
+Your data lives in `%AppData%\Mailize` (database, raw messages, attachments, logs).
 
-- [ ] Desktop application foundation
-- [ ] Local SMTP server
-- [ ] Project-based SMTP credentials
-- [ ] Email inbox and management
-- [ ] HTML and plain-text email preview
-- [ ] Email header and source inspector
-- [ ] Attachment management
-- [ ] Laravel and PHP configuration presets
-- [ ] Node.js configuration presets
-- [ ] Search and filtering
-- [ ] Windows installer
-- [ ] macOS and Linux support
+## Security
 
-## 🔒 Security & Privacy
+Captured mail is never forwarded; the SMTP server binds to localhost by default; passwords are encrypted at rest; HTML previews are sandboxed with a CSP that blocks all network access. Details and limitations: [docs/SECURITY.md](docs/SECURITY.md). Design overview: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-Mailize is designed for local development and testing.
+## Development
 
-- SMTP server binds to localhost by default.
-- Captured emails are not forwarded to external recipients.
-- Email content is treated as untrusted input.
-- HTML previews should disable scripts and remote resources by default.
-- Development credentials should never be reused in production.
+Requirements: Go 1.26+, Node 20+, the [Wails v2 CLI](https://wails.io/docs/gettingstarted/installation) and WebView2 (preinstalled on Windows 11). No C compiler is needed.
 
-## 🎯 Project Goal
+```powershell
+wails dev                      # live-reload development
+go test ./...                  # backend tests
+cd frontend; npm test          # frontend tests
+wails build -ldflags "-X mailize/internal/config.Version=1.0.0"   # -> build/bin/mailize.exe
+```
 
-Our goal is to provide developers with a simple, modern, and reliable desktop environment for testing and debugging email functionality across different programming languages and frameworks.
+Set `MAILIZE_DATA_DIR` to use a throwaway data folder.
 
-## 📌 Project Status
+### Windows installer (optional)
 
-🚧 Currently in planning and development.
+`wails build -nsis` creates an installer when [NSIS](https://nsis.sourceforge.io/) is installed (the project already contains `build/windows/installer/project.nsi`). macOS/Linux: `wails build` on the target OS — the code has no Windows-only dependencies, but only Windows has been built and tested.
 
-## 📄 License
+## Tech stack
+
+Go · Wails v2 · React 19 · TypeScript · Vite · Tailwind CSS 4 · Radix UI · Lucide · SQLite (`modernc.org/sqlite`) · `emersion/go-smtp` + `go-message`.
+
+## License
 
 License to be announced.
 
